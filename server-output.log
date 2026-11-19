@@ -1,0 +1,4 @@
+Server running on port 5000
+MongoDB Error: bad auth : Authentication failed.
+MongoDB connection failed: bad auth : Authentication failed.
+JSON APIs are still available.
