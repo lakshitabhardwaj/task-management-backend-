@@ -9,6 +9,7 @@ const connectDB = require('./config/db');
 
 // Import task routes
 const taskRoutes = require('./routes/TaskRoutes');
+const jsonTaskRoutes = require('./routes/jsonTaskRoutes');
 
 // Middleware
 app.use(cors());
@@ -21,22 +22,22 @@ app.get('/', (req, res) => {
 
 // Connect task routes
 app.use('/api/tasks', taskRoutes);
+app.use('/api/json-tasks', jsonTaskRoutes);
 
 // Start server after database connects
-const startServer = async () => {
-    try {
-        await connectDB();
+// Start Express server independently
+const PORT = process.env.PORT || 5000;
 
-        const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-
-    } catch (error) {
-        console.log('Server failed:', error.message);
-        process.exit(1);
-    }
-};
-
-startServer();
+// Connect MongoDB separately
+connectDB()
+    .then(() => {
+        console.log('MongoDB is ready!');
+    })
+    .catch((error) => {
+        console.log('MongoDB connection failed:', error.message);
+        console.log('JSON APIs are still available.');
+    });
